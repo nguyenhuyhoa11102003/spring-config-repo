@@ -1,0 +1,32 @@
+# Server configuration
+server:
+  port: 0
+
+# Application name
+spring:
+  application:
+    name: cart-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/cart_service?useSSL=false
+    username: root
+    password: root
+
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        use_sql_comments: false
+        format_sql: false
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+    endpoints:
+      web:
+        exposure:
+          include: "*"

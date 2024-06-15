@@ -1,0 +1,52 @@
+server:
+  port: 8080
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${app.eureka-server:localhost}:${server.port:8761}
+
+app:
+  eureka-server: localhost
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/product/**
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/order/**
+        - id: discovery-server
+          uri: http://${app.eureka-server:localhost}:${server.port:8761}
+          predicates:
+            - Path=/eureka/web
+          filters:
+            - SetPath=/
+        - id: discovery-server-static
+          uri: http://${app.eureka-server:localhost}:${server.port:8761}
+          predicates:
+            - Path=/eureka/**
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users/**
+        - id: cart-service
+          uri: lb://cart-service
+          predicates:
+            - Path=/api/v1/carts/**
+        - id: payment-service
+          uri: http://localhost:8888
+          predicates:
+            - Path=/api/v1/payments/**
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
